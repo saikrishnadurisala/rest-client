@@ -1,0 +1,111 @@
+<html>
+    <head>
+        <title>REST Client</title>
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+        <!-- Google Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+        <!-- Bootstrap core CSS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Material Design Bootstrap -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/css/mdb.min.css" rel="stylesheet">
+        <!-- JQuery -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Bootstrap tooltips -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+        <!-- Bootstrap core JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        <!-- MDB core JavaScript -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.18.0/js/mdb.min.js"></script>
+    </head>
+    <body>
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark black scrolling-navbar">        
+            <a class="navbar-brand pt-0 waves-effect" href="#">REST Web Client</a>
+        </nav>
+        <div class="container" style="margin-top: 100px;">
+            <div class="row">
+                <div class="col-md-2">
+                    <select id="requestMethod" class="form-control rounded-0" style=" border-radius:0px;">
+                        <option value="POST">POST</option>
+                        <option value="GET">GET</option>
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control rounded-0" placeholder="http://example.com/api-path" id="requestUrl"/>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" id="submitRequest" style="height:40px; width: 100%; border:0; color: white;background-color: cornflowerblue;">send</button>
+                </div>
+            </div>
+            <br>
+            <hr>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Request Payload</h4>
+                    <textarea id="inputPayload" class="form-control rounded-0" style="height:400px;"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <h4>Response Payload: <span id="statusCode"></span></h4>
+                    <textarea id="responsePayload" class="form-control rounded-0" style="height:400px;" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $('#submitRequest').on('click',function(){
+            var requestURL = $('#requestUrl').val();
+            if($('#inputPayload').val() != ""){
+                var requestPayload = JSON.parse($('#inputPayload').val());
+            }
+            $.ajax({
+            url: requestURL,
+            headers: { 
+                "Accept":"application/json" , 
+                "Content-Type":"application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+                },
+            data: requestPayload,
+            type: $('#requestMethod').val(),
+            statusCode: {
+                200: function(responseData){
+                    $('#responsePayload').text(JSON.stringify(responseData,undefined,4));
+                    $('#statusCode').text('200');
+                },
+                201: function(responseData){
+                    $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
+                    $('#statusCode').text('201');				
+                },
+                400: function(responseData){
+                    $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
+                    $('#statusCode').text('400');				
+                },
+                404: function(responseData){
+                    $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
+                    $('#statusCode').text('404');				
+                },
+                405: function(responseData){
+                    $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
+                    $('#statusCode').text('405');
+                },
+                500: function(responseData){
+                    $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
+                    $('#statusCode').text('500');
+                }
+            }
+        });
+        });
+        $('#requestMethod').on('change',function(){
+            if($('#requestMethod').val() == "GET"){
+                $('#inputPayload').attr("disabled","true");
+            }
+            else{
+                $('#inputPayload').removeAttr("disabled");
+            }
+        })
+        $('#inputPayload').keyup(function(){
+            $('#inputPayload').val(JSON.stringify(JSON.parse($('#inputPayload').val()),undefined,4));
+        });
+    </script>
+</html>
