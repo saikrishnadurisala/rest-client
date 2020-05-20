@@ -46,7 +46,14 @@
                     <textarea id="inputPayload" class="form-control rounded-0" style="height:400px;"></textarea>
                 </div>
                 <div class="col-md-6">
-                    <h4>Response Payload: <span id="statusCode"></span></h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Response Payload</h4>
+                        </div>
+                        <div class="col-md-6">
+                            <p id="statusCode"></p>
+                        </div>
+                    </div>
                     <textarea id="responsePayload" class="form-control rounded-0" style="height:400px;" readonly></textarea>
                 </div>
             </div>
@@ -71,27 +78,27 @@
             statusCode: {
                 200: function(responseData){
                     $('#responsePayload').text(JSON.stringify(responseData,undefined,4));
-                    $('#statusCode').text('200');
+                    $('#statusCode').text('200 OK');
                 },
                 201: function(responseData){
                     $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
-                    $('#statusCode').text('201');				
+                    $('#statusCode').text('201 NO CONTENT');			
                 },
                 400: function(responseData){
                     $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
-                    $('#statusCode').text('400');				
+                    $('#statusCode').text('400 BAD REQUEST');				
                 },
                 404: function(responseData){
                     $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
-                    $('#statusCode').text('404');				
+                    $('#statusCode').text('404 NOT FOUND');				
                 },
                 405: function(responseData){
                     $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
-                    $('#statusCode').text('405');
+                    $('#statusCode').text('405 METHOD NOT ALLOWED');
                 },
                 500: function(responseData){
                     $('#responsePayload').text(JSON.stringify(responseData.responseJSON,undefined,4));
-                    $('#statusCode').text('500');
+                    $('#statusCode').text('500 INTERNAL SERVER ERROR');
                 }
             }
         });
